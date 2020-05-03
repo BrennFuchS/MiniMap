@@ -30,7 +30,7 @@ namespace MiniMap
             GUI = GameObject.Find("GUI").transform;
             MiniMAPArrow = MiniMAPCamera.Find("PLAYERMARKER").gameObject;
 
-            MiniMAP.transform.Find("MINIMAP").SetParent(GUI.transform.Find("HUD"));
+            MiniMAP.transform.Find("MINIMAP").SetParent(GUI.transform.Find("Icons"));
 
             AB.Unload(false);
         }
@@ -39,12 +39,29 @@ namespace MiniMap
         {
             if (PLAYER.parent != null)
             {
-                if (PLAYER.parent.parent.parent.GetComponent<Rigidbody>() != null)
+                if (PLAYER.parent.parent.parent.parent.parent.GetComponent<Drivetrain>() != null)
                 {
-                    Zoom = PLAYER.parent.parent.parent.GetComponent<Rigidbody>().velocity.x + PLAYER.parent.parent.parent.GetComponent<Rigidbody>().velocity.z / 2f +- 40f;
+                    if (PLAYER.parent.parent.parent.parent.parent.GetComponent<Drivetrain>().rpm > 20f)
+                    {
+                        Zoom = Mathf.RoundToInt(Mathf.Abs(PLAYER.parent.parent.parent.parent.parent.GetComponent<Drivetrain>().velo) * 3.6f / 100f + 40f);
+                    }
+                    else
+                    {
+                        Zoom = 40f;
+                    }
                 }
-
-                PLAYER.parent.parent.localEulerAngles = new Vector3(PLAYER.parent.parent.localEulerAngles.x , 180f, PLAYER.parent.parent.localEulerAngles.z);
+                
+                if (PLAYER.parent.parent.parent.parent.GetComponent<Drivetrain>() != null)
+                {
+                    if (PLAYER.parent.parent.parent.parent.GetComponent<Drivetrain>().rpm > 20f)
+                    {
+                        Zoom = Mathf.RoundToInt(Mathf.Abs(PLAYER.parent.parent.parent.parent.GetComponent<Drivetrain>().velo) * 3.6f / 100f + 40f);
+                    }
+                    else
+                    {
+                        Zoom = 40f;
+                    }
+                }
                 
                 MiniMAPCamera.GetComponent<Camera>().orthographicSize = Zoom;
                 MiniMAPArrow.SetActive(false);
